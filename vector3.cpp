@@ -26,7 +26,7 @@ struct Vector3 {
 
 	// ベクトルの長さ
 	double length() {
-		return sqrt(x*2 + y*2 + z*2);
+		return sqrt(x*x + y*y + z*z);
 	}
 	// 内積(ドット積)
 	double dot(Vector3 vec) {
@@ -38,6 +38,11 @@ struct Vector3 {
 		vec_new.x = y * vec.z - z * vec.y;
 		vec_new.y = z * vec.x - x * vec.z;
 		vec_new.z = x * vec.y - y * vec.x;
+		return vec_new;
+	}
+	// 正規化
+	auto normalize() {
+		Vector3 vec_new = {x / length(), y / length(), z / length()};
 		return vec_new;
 	}
 	// ベクトルを表示する
@@ -57,5 +62,9 @@ int main() {
 	(a + b).show();
 	(a - b).show();
 
+	Vector3 c = {2, 2, 1};
+	cout << c.length() << endl;
+	c.show();
+	c.normalize().show();
 	return 0;
 }
