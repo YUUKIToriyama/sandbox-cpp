@@ -12,6 +12,9 @@ struct Parameters {
 	double maxval;
 	int type;
 };
+auto p = Parameters{30,255,THRESH_BINARY};
+
+Mat img_gray, img_contour;
 
 int main(int argc, char** argv) {
 	String filename;
@@ -24,16 +27,24 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 
-	Mat img_gray;
+	//Mat img_gray;
 	cvtColor(img, img_gray, COLOR_BGR2GRAY);
 	
+
 	namedWindow("convert/threshold", WINDOW_NORMAL);
 
-	auto p = Parameters{30,255,THRESH_BINARY};
+	createTrackbar("しきい値", "convert/threshold", 0, 255, [](int size, void*) {
+		p.thresh = (double)size;
+		threshold(img_gray, img_contour, p.thresh, 255, p.type);
+		imshow("convert/threshold", img_contour);
+	});
+	createTrackbar("最大値", "convert/threshold", 0, 255, [](int size, void*) {
+		p.maxval = (double)size;
+		threshold(img_gray, img_contour, p.thresh, 255, p.type);
+		imshow("convert/threshold", img_contour);
+	});
 
-	Mat img_contour;
-	threshold(img_gray, img_contour, p.thresh, 255, p.type);
-	imshow("convert/threshold", img_contour);
+	imshow("convert/threshold", img);
 	waitKey(0);
 	return 0;
 }
