@@ -7,28 +7,33 @@
 using namespace cv;
 using namespace std;
 
-int threshold_value = 200;
-int threshold_type = 3;
+struct Parameters {
+	double thresh;
+	double maxval;
+	int type;
+};
 
 int main(int argc, char** argv) {
-	String imageName;
+	String filename;
 	if (argc > 1) {
-		imageName = argv[1];
+		filename = argv[1];
 	}
-	cin >> threshold_value;
-	Mat src = imread(samples::findFile(imageName), IMREAD_COLOR);
-	if (src.empty()) {
-		cout << "Cannot read the image: " << imageName << std::endl;
+	Mat img = imread(filename, IMREAD_COLOR);
+	if (img.empty()) {
+		cout << "Cannot read the image: " << filename << endl;
 		return -1;
 	}
 
-	Mat src_gray;
-	cvtColor(src, src_gray, COLOR_BGR2GRAY);
-	namedWindow("image show", WINDOW_AUTOSIZE);
+	Mat img_gray;
+	cvtColor(img, img_gray, COLOR_BGR2GRAY);
 	
-	Mat dst;
-	threshold(src_gray, dst, threshold_value, 255, threshold_type);
-	imshow("threshold", dst);
-	waitKey();
+	namedWindow("convert/threshold", WINDOW_NORMAL);
+
+	auto p = Parameters{30,255,THRESH_BINARY};
+
+	Mat img_contour;
+	threshold(img_gray, img_contour, p.thresh, 255, p.type);
+	imshow("convert/threshold", img_contour);
+	waitKey(0);
 	return 0;
 }
